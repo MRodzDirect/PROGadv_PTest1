@@ -1,123 +1,214 @@
-# Projecto 1 - Sistema de Gestion Vehicular
+# Sistema de Gestión Vehicular y Saldo de Celulares
 
+Este repositorio contiene dos proyectos Java desarrollados con NetBeans, utilizando JPA (Java Persistence API) con Hibernate para la gestión de datos y Swing para las interfaces gráficas. A continuación, se detalla cada proyecto, incluyendo su propósito, estructura, lógica, interfaces gráficas y resultados.
 
+---
 
-## Interfaz grafica:
+## Proyecto 1: Sistema de Gestión Vehicular
 
-![image-20250505134024232](./assets/image-20250505134024232.png)
+Este proyecto permite gestionar propietarios, vehículos y turnos, con restricciones específicas para la reserva de turnos. Los objetivos principales son:
 
+- Registrar propietarios y vehículos.
+- Reservar turnos para vehículos, validando que un vehículo no tenga dos turnos el mismo día ni en el mismo andén.
 
+### Interfaz Gráfica
 
-![image-20250505134104217](./assets/image-20250505134104217.png)
+Las siguientes imágenes muestran las interfaces gráficas del sistema:
 
+- **Formulario para registrar propietario y vehículo:**
+  ![Formulario de ingreso de vehículo](./assets/image-20250505134024232.png)
 
+- **Formulario para reservar turno:**
+  ![Formulario de reserva de turno](./assets/image-20250505134104217.png)
 
-![image-20250505134148139](./assets/image-20250505134148139.png)
+- **Mensaje de error al intentar reservar un turno para el mismo vehículo en el mismo día:**
+  ![Error: Mismo día](./assets/image-20250505134148139.png)
 
-![image-20250505134216436](./assets/image-20250505134216436.png)
+- **Mensaje de error al intentar reservar un turno para el mismo vehículo en el mismo andén:**
+  ![Error: Mismo andén](./assets/image-20250505134216436.png)
 
-## Tablas Necesarias:
+- **Confirmación de turno registrado exitosamente:**
+  ![Turno registrado](./assets/image-20250505134739444.png)
 
-* Tres
+### Estructura de la Base de Datos
 
-![image-20250505135216291](./assets/image-20250505135216291.png)
+El sistema utiliza tres tablas en una base de datos MySQL (`vehiculos_db`):
 
-![image-20250505140638621](./assets/image-20250505140638621.png)
+#### Tablas
+- **Propietario:**
+  ![Tabla Propietario](./assets/image-20250505140223329.png)
 
-## Logica:
+- **Vehículo:**
+  ![Tabla Vehículo](./assets/image-20250505140307921.png)
 
+- **Turno:**
+  ![Tabla Turno](./assets/image-20250505140325874.png)
 
+#### Diagrama de Clases
+El diagrama de clases define las entidades y sus relaciones:
+- **Propietario:** `IDPROP` (PK), `CEDULA`, `NOMBRE`, `APELLIDO`.
+- **Vehículo:** `IDVEHI` (PK), `PLACA`, `MARCA`, `IDPROP` (FK a Propietario).
+- **Turno:** `IDTURNO` (PK), `ANDEN`, `DIA`, `HORA`, `IDVEHI` (FK a Vehículo).
 
-![image-20250505134257971](./assets/image-20250505134257971.png)
+![Diagrama de Clases 1](./assets/image-20250505135216291.png)
 
-![image-20250505134316905](./assets/image-20250505134316905.png)
+![Diagrama de Clases 2](./assets/image-20250505140638621.png)
 
-![image-20250505134347763](./assets/image-20250505134347763.png)
+### Lógica del Sistema
 
-Si quiero registrar en el mismo anden:
+#### Registro de Propietarios y Vehículos
+- Un propietario se registra con su cédula, nombre y apellido.
+- Un vehículo se asocia a un propietario existente y se registra con su placa y marca.
+- Ejemplo de registro exitoso:
+  ![Registro de vehículo](./assets/image-20250505134257971.png)
 
+#### Reserva de Turnos
+- **Validaciones:**
+  1. **Mismo Día:** Un vehículo no puede tener dos turnos el mismo día.
+     - Ejemplo de error:
+       ![Error: Mismo día](./assets/image-20250505134556723.png)
+       ![Mensaje de error: Mismo día](./assets/image-20250505134610579.png)
+  2. **Mismo Andén:** Un vehículo no puede tener dos turnos en el mismo andén.
+     - Ejemplo de error:
+       ![Error: Mismo andén](./assets/image-20250505134522162.png)
+       ![Mensaje de error: Mismo andén](./assets/image-20250505134530370.png)
 
+- **Nota:** La validación del día se ejecuta primero, seguida por la validación del andén.
+- **Excepción:** Diferentes vehículos (incluso del mismo propietario) pueden tener turnos en el mismo andén, día y hora.
+  - Ejemplo:
+    ![Vehículos diferentes, mismo andén y día](./assets/image-20250505135330278.png)
+    ![Confirmación de turno para otro vehículo](./assets/image-20250505135411666.png)
 
-![image-20250505134522162](./assets/image-20250505134522162.png)
+### Archivos Necesarios
 
-![image-20250505134530370](./assets/image-20250505134530370.png)
+La estructura del proyecto está organizada en los siguientes paquetes:
 
-O en el mismo dia:
+- **Paquete `com.sistemavehiculos.modelo`:** Contiene las entidades JPA (`Propietario`, `Vehículo`, `Turno`).
+- **Paquete `com.sistemavehiculos.servicio`:** Contiene la lógica de negocio (`VehiculoServicio`).
+- **Paquete `com.sistemavehiculos.presentacion`:** Contiene las interfaces gráficas (`IngresoVehiculo`, `ReservaTurno`).
 
-![image-20250505134556723](./assets/image-20250505134556723.png)
+#### Archivos de Configuración
+- **`pom.xml`:** Define las dependencias del proyecto, incluyendo Hibernate para JPA y el conector de MySQL.
+- **`persistence.xml`:** Configura la unidad de persistencia (`VehiculosPU`), la conexión a la base de datos y la creación automática de tablas mediante Hibernate.
 
-![image-20250505134610579](./assets/image-20250505134610579.png)
+![Estructura del proyecto](./assets/image-20250505135552193.png)
 
+---
 
+## Proyecto 2: Sistema de Saldo de Celulares
 
-Como mostre previamente no sucede nada cuando se registra OTRO vehiculo en el mismo anden o el mismo dia
+Este proyecto permite gestionar clientes, celulares y recargas, con dos opciones para realizar recargas. Los objetivos principales son:
 
-**Nota :** En este sistema la primera sentencia de verificacion en ejecutarse es el dia, luego se verifica el anden.
+- Registrar clientes y celulares.
+- Realizar recargas con distribución manual o automática del valor entre saldo y megas.
 
-![image-20250505134739444](./assets/image-20250505134739444.png) 
+### Interfaz Gráfica
 
-## Archivos necesarios:
+Las siguientes imágenes muestran las interfaces gráficas del sistema:
 
-![image-20250505135552193](./assets/image-20250505135552193.png)
+- **Formulario para registrar cliente y celular:**
+  ![Formulario de ingreso de celular](./assets/image-20250505141715935.png)
 
-* pom.xml -> Donde llamamos las librerias que trabajaran en el projecto, como enlace de JPA usamos hibernate en lugar de Eclipse al ofrecernos ventajas como la creacion automatica de tablas.
-* persistence.xml -> Nuestra unidad de persistencia donde establecemos el nombre de la unidad (ejm: Proyecto_PU), libreria de persistencia (Hibernate) y la conexion JDBC donde conectaremos todo nuestro proyecto hacia una base de datos con sus tablas automaticamente creadas gracias a Hibernate JPA
-* Clases del paquete Presentacion -> Interfaces graficas mostradas (para registrar propietarios, vehiculos y reservar uno o mas  turnos para el mismo) 
-* Clase del paquete Logica -> Logica de Verificacion del anden y el dia para cada vehiculo, en este paquete colocaremos mas clases de validacion y control de las reglas del negocio a futuro.
-* Clases del paquete "Clases" (valga la redundancia) -> Entidades que se crearan como tablas en nuestra base de datos gracias a Hibernate JPA
+- **Formulario para realizar recarga:**
+  ![Formulario de recarga](./assets/image-20250505141729152.png)
 
-## Resultado
+- **Confirmación de recarga exitosa:**
+  ![Recarga exitosa](./assets/image-20250505141758335.png)
 
-### Tablas:
+### Estructura de la Base de Datos
 
-![Tabla propietario](./assets/image-20250505140223329.png)
+El sistema utiliza tres tablas en una base de datos MySQL (`celulares_db`):
 
-![Tabla vehiculo](./assets/image-20250505140307921.png)
+#### Tablas
+- **Cliente:** `IDCLI` (PK), `CEDULA`, `NOMBRES`, `APELLIDOS`.
+- **Celular:** `IDCEL` (PK), `NUMERO`, `ESTADO`, `SALDO`, `MEGAS`, `IDCLI` (FK a Cliente).
+- **Recarga:** `IDREC` (PK), `VALOR`, `SALDO`, `MEGAS`, `IDCEL` (FK a Celular).
 
-![Tabla turno](./assets/image-20250505140325874.png)
+#### Diagrama de Clases
+![Diagrama de Clases](./assets/image-20250505140756400.png)
 
+### Lógica del Sistema
 
+#### Registro de Clientes y Celulares
+- Un cliente se registra con su cédula, nombres y apellidos.
+- Un celular se asocia a un cliente existente y se registra con su número y estado (0 = inactivo, 1 = activo).
 
-## FAQ:
+#### Realizar Recargas
+- **Validaciones:**
+  - Solo se puede recargar un celular con estado activo (`estado = 1`).
+- **Opción 1 (Manual):**
+  - El usuario define cuánto del valor va al saldo, y el resto se convierte en megas (5 GB por dólar).
+- **Opción 2 (Automática):**
+  - El valor se distribuye automáticamente: 2/3 para saldo y 1/3 para megas (5 GB por dólar).
 
-* Se pueden registrar 2 vehiculos de un mismo propietario en el mismo anden, el mismo dia y la misma hora?
+### Archivos Necesarios
 
-  > Si
+La estructura del proyecto está organizada en los siguientes paquetes:
 
-  ![image-20250505135330278](./assets/image-20250505135330278.png)
+- **Paquete `com.sistemacelulares.modelo`:** Contiene las entidades JPA (`Cliente`, `Celular`, `Recarga`).
+- **Paquete `com.sistemacelulares.servicio`:** Contiene la lógica de negocio (`CelularServicio`).
+- **Paquete `com.sistemacelulares.presentacion`:** Contiene las interfaces gráficas (`IngresoCelular`, `RecargaCelular`).
 
-  ![image-20250505135411666](./assets/image-20250505135411666.png)
+#### Archivos de Configuración
+- **`pom.xml`:** Igual que en el Proyecto 1, define las dependencias.
+- **`persistence.xml`:** Configura la unidad de persistencia (`CelularesPU`) y la conexión a la base de datos.
 
-# Projecto 2 -> Sistema de Saldo de Celulares
+![Estructura del proyecto 1](./assets/image-20250505141633546.png)
 
-## Interfaz grafica:
+![Estructura del proyecto 2](./assets/image-20250505141641205.png)
 
-![image-20250505141715935](./assets/image-20250505141715935.png)
+---
 
-![image-20250505141729152](./assets/image-20250505141729152.png)
+## Instrucciones para Ejecutar los Proyectos
 
-![image-20250505141758335](./assets/image-20250505141758335.png)
+### Requisitos Previos
+1. **Java JDK:** Asegúrate de tener instalado Java JDK 8 o superior.
+2. **MySQL:** Instala MySQL y crea las bases de datos `vehiculos_db` y `celulares_db`.
+3. **NetBeans:** Usa NetBeans como IDE para abrir y ejecutar los proyectos.
+4. **Dependencias:** Las dependencias están definidas en `pom.xml`. Asegúrate de que Maven las descargue correctamente.
 
-## Tablas:
+### Pasos para Configurar
+1. **Clonar el Repositorio:**
+   
+   ``` bash
+   git clone https://github.com/MRodzDirect/PROGadv_PTest1.git
+   ```
+   
+   
+   
+2. **Abrir en NetBeans: **
 
-* 3 :
+   * Abre cada proyecto (SistemaVehiculos y SistemaCelulares) en NetBeans.
 
-![image-20250505140756400](./assets/image-20250505140756400.png)
+3. **Configurar la Base de Datos:***
 
-## Logica:
+- Actualiza las credenciales en persistence.xml (usuario y contraseña de MySQL).
+- Hibernate creará automáticamente las tablas al ejecutar el proyecto.
 
-## Archivos necesarios:
+4. **Ejecutar:**
 
-![image-20250505141633546](./assets/image-20250505141633546.png)
+- Para el Proyecto 1, ejecuta IngresoVehiculo.java para iniciar.
 
-![image-20250505141641205](./assets/image-20250505141641205.png)
+- Para el Proyecto 2, ejecuta IngresoCelular.java para iniciar.
 
-* Lo mismo que el anterior caso
+  
 
-## Resultado
+  ### FAQ:
 
+  **Proyecto 1: Sistema de Gestión Vehicular**
 
+  - ¿Se pueden registrar dos vehículos de un mismo propietario en el mismo andén, día y hora?
 
-# Autor:
+    Sí, siempre que sean vehículos diferentes. La restricción aplica solo al mismo vehículo.
 
-* MRodzDirect
+  **Proyecto 2: Sistema de Saldo de Celulares**
+
+  - ¿Qué pasa si intento recargar un celular inactivo?
+
+    El sistema mostrará un error indicando que el celular debe estar activo (estado = 1).
+
+  ------
+
+  ### Autor
+
+  - MRodzDirect 😉
